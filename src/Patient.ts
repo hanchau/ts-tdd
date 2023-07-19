@@ -1,46 +1,51 @@
+export class AgeInterval {
+    public readonly start: number;
+    public readonly end: number;
+    private readonly label: string;
+    private readonly formatter: (age: number) => string;
 
+    constructor(start: number, end: number, label: string, formatter: (age: number) => string) {
+        this.start = start;
+        this.end = end;
+        this.label = label;
+        this.formatter = formatter;
+    }
+
+    isWithinInterval(age: number): boolean {
+        return age >= this.start && age < this.end;
+    }
+
+    formatAge(age: number): string {
+        return this.formatter(age);
+    }
+}
 
 export class Patient {
     private dob: Date | undefined;
     private name: string;
-    constructor(name: string, dob?: Date) {
+    private ageIntervals: AgeInterval[];
+
+    constructor(name: string, ageIntervals:AgeInterval[],  dob?: Date) {
         this.dob = dob;
         this.name = name;
+        this.ageIntervals = ageIntervals;
     }
 
-
-    getAge() {
+    getAge(): string {
         if (!this.dob) {
-            throw new Error("DOB Not Present.")
+            throw new Error("DOB Not Present.");
         }
+
         const currentDate: Date = new Date();
-        const daysInAMonth: number = 30;
         const ageInMilliSeconds: number = currentDate.getTime() - this.dob.getTime();
-        const hours: number = Math.floor(ageInMilliSeconds / (1000 * 60 * 60));
-        const days: number = Math.floor(ageInMilliSeconds / (1000 * 60 * 60 * 24));
 
-        const currentYear: number = currentDate.getFullYear();
-        const dobYear: number = this.dob.getFullYear();
-        const dobMonth: number = this.dob.getMonth();
-        let months: number = (currentYear - dobYear) * 12 + Math.floor(days / daysInAMonth);
-        const years: number = currentYear - dobYear;
-        console.log(years, months, days, hours)
-
-        if (years >= 1) {
-            return this.name + ' is ' + years + ' Years Old';
-        }
-        if (years < 1 && months >= 1) {
-            return this.name + ' is ' + months + ' Months Old';
-        }
-        else if (months < 1 && days >= 1) {
-            return this.name + ' is ' + days + ' Days Old';
-        }
-        else if (days < 1 && hours >= 1) {
-            return this.name + ' is ' + hours + ' Hours Old';
-        }
-        else {
-            return this.name + ' is <1 Hours Old';
+        for (const interval of this.ageIntervals) {
+            if (interval.isWithinInterval(ageInMilliSeconds)) {
+                const ageValue: number = Math.floor(ageInMilliSeconds / interval.start);
+                return interval.formatAge(ageValue);
+            }
         }
 
+        return `${this.name} is <1 Hours Old`;
     }
 }

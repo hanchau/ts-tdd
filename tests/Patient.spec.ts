@@ -1,17 +1,36 @@
-import { Patient } from "../src/Patient";
+import { AgeInterval, Patient } from "../src/Patient";
 
 describe("Patient", () => {
-  let currentDate: Date;
-  let name: string;
+    let currentDate: Date;
+    let name: string;
+    let ageIntervals: AgeInterval[];
+    let milliSecondsInAnHour: number;
+    let milliSecondsInADay: number;
+    let milliSecondsInAMonth: number;
+    let milliSecondsInAnYear: number;
 
     beforeEach(() => {
         currentDate = new Date();
         name = "Anuj"
+
+        milliSecondsInAnHour = 60 * 60 * 1000;
+        milliSecondsInADay = 24 * milliSecondsInAnHour;
+        milliSecondsInAMonth = 30 * milliSecondsInADay;
+        milliSecondsInAnYear = 12 * milliSecondsInAMonth;
+
+        ageIntervals = [
+            new AgeInterval(milliSecondsInAnYear, Number.MAX_VALUE, "Years", (age) => `${name} is ${age} Years Old`),
+            new AgeInterval(milliSecondsInAMonth, milliSecondsInAnYear, "Months", (age) => `${name} is ${age} Months Old`),
+            new AgeInterval(milliSecondsInADay, milliSecondsInAMonth, "Days", (age) => `${name} is ${age} Days Old`),
+            new AgeInterval(milliSecondsInAnHour, milliSecondsInADay, "Hours", (age) => `${name} is ${age} Hours Old`),
+            new AgeInterval(milliSecondsInAnHour, 0, "Hours", (age) => `${name} is < 1 Hours Old`),
+        ];
+
     });
 
 
     it("1. Should throw an exception when DOB is not with the Patient.", () => {
-        let patient = new Patient("Anuj");
+        let patient: Patient = new Patient("Anuj", ageIntervals);
         expect(() => patient.getAge()).toThrowError('DOB Not Present.');
     });
 
@@ -19,15 +38,15 @@ describe("Patient", () => {
     it("2. Should return `{name} is <1 Hours Old` if ``CurrentDate-DOB`` is less than an hour.", () => {
         let milliSecondsInFiftyMins: number = 50 * 60 * 1000;
         const lessThanOneHourDOB: Date = new Date(currentDate.getTime() - milliSecondsInFiftyMins);
-        let patient: Patient = new Patient(name, lessThanOneHourDOB);
+        let patient: Patient = new Patient(name, ageIntervals, lessThanOneHourDOB);
         let ageLessThanAnHour: string = name + ' is <1 Hours Old'
         expect(patient.getAge()).toBe(ageLessThanAnHour);
     });
 
     it("2.1 Should return `{name} is 1 Hours Old` if ``CurrentDate-DOB`` is equal to 1 hour.", () => {
-        let milliSecondsInFiftyMins: number = 60 * 60 * 1000;
-        const lessThanOneHourDOB: Date = new Date(currentDate.getTime() - milliSecondsInFiftyMins);
-        let patient: Patient = new Patient(name, lessThanOneHourDOB);
+        let milliSecondsInSixtyMins: number = 60 * 60 * 1000;
+        const equalToOneHourDOB: Date = new Date(currentDate.getTime() - milliSecondsInSixtyMins);
+        let patient: Patient = new Patient(name, ageIntervals, equalToOneHourDOB);
         let ageEqualToOneHour: string = name + ' is 1 Hours Old'
         expect(patient.getAge()).toBe(ageEqualToOneHour);
     });
@@ -38,7 +57,7 @@ describe("Patient", () => {
         let milliSecondsInXHours: number = hoursOld * 60 * 60 * 1000;
         const lessThanADayDOB: Date = new Date(currentDate.getTime() - milliSecondsInXHours);
 
-        let patient: Patient = new Patient(name, lessThanADayDOB);
+        let patient: Patient = new Patient(name, ageIntervals, lessThanADayDOB);
 
         let ageLessThanADay: string = name + ' is ' + hoursOld + ' Hours Old'
         expect(patient.getAge()).toBe(ageLessThanADay);
@@ -50,7 +69,7 @@ describe("Patient", () => {
         let milliSecondsInXDays: number = daysOld * 24 * 60 * 60 * 1000;
         const lessThanAMonthDOB: Date = new Date(currentDate.getTime() - milliSecondsInXDays);
 
-        let patient: Patient = new Patient(name, lessThanAMonthDOB);
+        let patient: Patient = new Patient(name, ageIntervals, lessThanAMonthDOB);
 
         let ageLessThanAMonth: string = name + ' is ' + daysOld + ' Days Old'
         expect(patient.getAge()).toBe(ageLessThanAMonth);
@@ -62,7 +81,7 @@ describe("Patient", () => {
         let milliSecondsInXDays: number = daysOld * 24 * 60 * 60 * 1000;
         const equalToAMonthDOB: Date = new Date(currentDate.getTime() - milliSecondsInXDays);
 
-        let patient: Patient = new Patient(name, equalToAMonthDOB);
+        let patient: Patient = new Patient(name, ageIntervals, equalToAMonthDOB);
 
         let ageEqualToAMonth: string = name + ' is 1 Months Old'
         expect(patient.getAge()).toBe(ageEqualToAMonth);
@@ -73,7 +92,7 @@ describe("Patient", () => {
         let milliSecondsInXDays: number = yearsOld * 12 * 30 * 24 * 60 * 60 * 1000;
         const equalToXYearsDOB: Date = new Date(currentDate.getTime() - milliSecondsInXDays);
 
-        let patient: Patient = new Patient(name, equalToXYearsDOB);
+        let patient: Patient = new Patient(name, ageIntervals, equalToXYearsDOB);
 
         let ageEqualToElevenYears: string = name + ' is ' + yearsOld + ' Years Old'
         expect(patient.getAge()).toBe(ageEqualToElevenYears);
