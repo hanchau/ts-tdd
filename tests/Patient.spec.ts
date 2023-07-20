@@ -8,6 +8,8 @@ describe("Patient", () => {
     let milliSecondsInADay: number;
     let milliSecondsInAMonth: number;
     let milliSecondsInAnYear: number;
+    let zeroMilliSeconds: number = 0;
+    let maxMilliSeconds: number = Number.MAX_VALUE;
 
     beforeEach(() => {
         currentDate = new Date();
@@ -19,11 +21,11 @@ describe("Patient", () => {
         milliSecondsInAnYear = 12 * milliSecondsInAMonth;
 
         ageIntervals = [
-            new AgeInterval(milliSecondsInAnYear, Number.MAX_VALUE,  (age) => `${name} is ${age} Years Old`),
+            new AgeInterval(milliSecondsInAnYear, maxMilliSeconds,  (age) => `${name} is ${age} Years Old`),
             new AgeInterval(milliSecondsInAMonth, milliSecondsInAnYear,  (age) => `${name} is ${age} Months Old`),
             new AgeInterval(milliSecondsInADay, milliSecondsInAMonth,(age) => `${name} is ${age} Days Old`),
             new AgeInterval(milliSecondsInAnHour, milliSecondsInADay,  (age) => `${name} is ${age} Hours Old`),
-            new AgeInterval(0, milliSecondsInAnHour, (age) => `${name} is < 1 Hours Old`),
+            new AgeInterval(zeroMilliSeconds, milliSecondsInAnHour, (age) => `${name} is < 1 Hours Old`),
         ];
 
     });

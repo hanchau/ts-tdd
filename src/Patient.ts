@@ -29,7 +29,7 @@ export class Patient {
         this.ageIntervals = ageIntervals;
     }
 
-    getAge(): string {
+    getAge() {
         if (!this.dob) {
             throw new Error("DOB Not Present.");
         }
@@ -43,7 +43,5 @@ export class Patient {
                 return interval.formatAge(ageValue);
             }
         }
-
-        return `${this.name} is <1 Hours Old`;
     }
 }
