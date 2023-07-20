@@ -1,13 +1,11 @@
 export class AgeInterval {
     public readonly start: number;
     public readonly end: number;
-    private readonly label: string;
     private readonly formatter: (age: number) => string;
 
-    constructor(start: number, end: number, label: string, formatter: (age: number) => string) {
+    constructor(start: number, end: number, formatter: (age: number) => string) {
         this.start = start;
         this.end = end;
-        this.label = label;
         this.formatter = formatter;
     }
 

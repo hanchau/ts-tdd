@@ -19,11 +19,11 @@ describe("Patient", () => {
         milliSecondsInAnYear = 12 * milliSecondsInAMonth;
 
         ageIntervals = [
-            new AgeInterval(milliSecondsInAnYear, Number.MAX_VALUE, "Years", (age) => `${name} is ${age} Years Old`),
-            new AgeInterval(milliSecondsInAMonth, milliSecondsInAnYear, "Months", (age) => `${name} is ${age} Months Old`),
-            new AgeInterval(milliSecondsInADay, milliSecondsInAMonth, "Days", (age) => `${name} is ${age} Days Old`),
-            new AgeInterval(milliSecondsInAnHour, milliSecondsInADay, "Hours", (age) => `${name} is ${age} Hours Old`),
-            new AgeInterval(milliSecondsInAnHour, 0, "Hours", (age) => `${name} is < 1 Hours Old`),
+            new AgeInterval(milliSecondsInAnYear, Number.MAX_VALUE,  (age) => `${name} is ${age} Years Old`),
+            new AgeInterval(milliSecondsInAMonth, milliSecondsInAnYear,  (age) => `${name} is ${age} Months Old`),
+            new AgeInterval(milliSecondsInADay, milliSecondsInAMonth,(age) => `${name} is ${age} Days Old`),
+            new AgeInterval(milliSecondsInAnHour, milliSecondsInADay,  (age) => `${name} is ${age} Hours Old`),
+            new AgeInterval(0, milliSecondsInAnHour, (age) => `${name} is < 1 Hours Old`),
         ];
 
     });
@@ -39,7 +39,7 @@ describe("Patient", () => {
         let milliSecondsInFiftyMins: number = 50 * 60 * 1000;
         const lessThanOneHourDOB: Date = new Date(currentDate.getTime() - milliSecondsInFiftyMins);
         let patient: Patient = new Patient(name, ageIntervals, lessThanOneHourDOB);
-        let ageLessThanAnHour: string = name + ' is <1 Hours Old'
+        let ageLessThanAnHour: string = name + ' is < 1 Hours Old'
         expect(patient.getAge()).toBe(ageLessThanAnHour);
     });
 
