@@ -8,6 +8,7 @@ describe("Patient", () => {
     let milliSecondsInADay: number;
     let milliSecondsInAMonth: number;
     let milliSecondsInAnYear: number;
+    let milliSecondsInADecade: number;
     let zeroMilliSeconds: number = 0;
     let maxMilliSeconds: number = Number.MAX_VALUE;
 
@@ -19,9 +20,12 @@ describe("Patient", () => {
         milliSecondsInADay = 24 * milliSecondsInAnHour;
         milliSecondsInAMonth = 30 * milliSecondsInADay;
         milliSecondsInAnYear = 12 * milliSecondsInAMonth;
+        milliSecondsInAnYear = 12 * milliSecondsInAMonth;
+        milliSecondsInADecade = 10 * milliSecondsInAnYear;
 
         ageIntervals = [
-            new AgeInterval(milliSecondsInAnYear, maxMilliSeconds,  (age) => `${name} is ${age} Years Old`),
+            new AgeInterval(milliSecondsInADecade, maxMilliSeconds,  (age) => `${name} is ${age} Decades Old`),
+            new AgeInterval(milliSecondsInAnYear, milliSecondsInADecade,  (age) => `${name} is ${age} Years Old`),
             new AgeInterval(milliSecondsInAMonth, milliSecondsInAnYear,  (age) => `${name} is ${age} Months Old`),
             new AgeInterval(milliSecondsInADay, milliSecondsInAMonth,(age) => `${name} is ${age} Days Old`),
             new AgeInterval(milliSecondsInAnHour, milliSecondsInADay,  (age) => `${name} is ${age} Hours Old`),
@@ -30,11 +34,6 @@ describe("Patient", () => {
 
     });
 
-
-    it("1. Should throw an exception when DOB is not with the Patient.", () => {
-        let patient: Patient = new Patient("Anuj", ageIntervals);
-        expect(() => patient.getAge()).toThrowError('DOB Not Present.');
-    });
 
 
     it("2. Should return `{name} is <1 Hours Old` if ``CurrentDate-DOB`` is less than an hour.", () => {
@@ -90,9 +89,9 @@ describe("Patient", () => {
 
     });
     it("6. Should return `{name} is X Years Old` if ``CurrentDate-DOB`` is less than X+1 Years.", () => {
-        let yearsOld: number = 11;
-        let milliSecondsInXDays: number = yearsOld * 12 * 30 * 24 * 60 * 60 * 1000;
-        const equalToXYearsDOB: Date = new Date(currentDate.getTime() - milliSecondsInXDays);
+        let yearsOld: number = 9;
+        let milliSecondsInXYears: number = yearsOld * 12 * 30 * 24 * 60 * 60 * 1000;
+        const equalToXYearsDOB: Date = new Date(currentDate.getTime() - milliSecondsInXYears);
 
         let patient: Patient = new Patient(name, ageIntervals, equalToXYearsDOB);
 
@@ -101,5 +100,19 @@ describe("Patient", () => {
 
     });
 
+    it("7. Should return `{name} is X Decades Old` if ``CurrentDate-DOB`` is less than X+1 Decades.", () => {
+        let yearsOld: number = 67;
+        let yearsInADecade: number = 10;
+        let decadesOld: number = Math.floor(yearsOld / yearsInADecade);
+
+        let milliSecondsInXYears: number = yearsOld * 12 * 30 * 24 * 60 * 60 * 1000;
+        const equalToXDecadesDOB: Date = new Date(currentDate.getTime() - milliSecondsInXYears);
+
+        let patient: Patient = new Patient(name, ageIntervals, equalToXDecadesDOB);
+
+        let ageEqualToSixtySevenYears: string = name + ' is ' + decadesOld + ' Decades Old'
+        expect(patient.getAge()).toBe(ageEqualToSixtySevenYears);
+
+    });
 
 });

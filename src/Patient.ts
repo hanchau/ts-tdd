@@ -19,11 +19,11 @@ export class AgeInterval {
 }
 
 export class Patient {
-    private dob: Date | undefined;
+    private dob: Date;
     private name: string;
     private ageIntervals: AgeInterval[];
 
-    constructor(name: string, ageIntervals:AgeInterval[],  dob?: Date) {
+    constructor(name: string, ageIntervals:AgeInterval[],  dob: Date) {
         this.dob = dob;
         this.name = name;
         this.ageIntervals = ageIntervals;
