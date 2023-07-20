@@ -25,9 +25,7 @@ export class Address {
         if (listOfZipCodes.length === 0) {
             return false;
         }
-        console.log('before flag', this.flag)
         this.flag = !listOfZipCodes.includes(this.zipCode);
-        console.log('after flag', this.flag)
         return this.flag;
     }
 }
