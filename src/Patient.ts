@@ -30,9 +30,6 @@ export class Patient {
     }
 
     getAge() {
-        if (!this.dob) {
-            throw new Error("DOB Not Present.");
-        }
 
         const currentDate: Date = new Date();
         const ageInMilliSeconds: number = currentDate.getTime() - this.dob.getTime();
